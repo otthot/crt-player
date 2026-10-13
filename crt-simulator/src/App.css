@@ -1,4 +1,8 @@
-
-html {
-    background-color: black;
+/* Always a centered square that fills the shorter side of the viewport */
+.app {
+  width: min(100vw, 100dvh);
+  aspect-ratio: 1 / 1;
+  /* Lets children size themselves with cqmin units relative to the square */
+  container-type: size;
+  --crt-padding: 4cqmin;
 }

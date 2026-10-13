@@ -1,0 +1,40 @@
+/* All sizes in cqmin so the player scales with the .app square */
+.player {
+  --bar-height: 3cqmin;
+  --gap: 2cqmin;
+  /* Cover fills what's left of the square after padding, gap and bar */
+  --cover-size: calc(100cqmin - 2 * var(--crt-padding) - var(--gap) - var(--bar-height));
+
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap);
+}
+
+.player__cover {
+  display: block;
+  width: var(--cover-size);
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.player__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.player__progress {
+  width: var(--cover-size);
+  height: var(--bar-height);
+  overflow: hidden;
+  border-radius: 1cqmin;
+}
+
+.player__progress-fill {
+  height: 100%;
+  background-color: green;
+}
