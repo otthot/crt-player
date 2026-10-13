@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+import GestureHandler
+from GestureHandler import GestureEvent
 from SpotifyClient import SpotifyService
 
 app = FastAPI()
@@ -39,3 +41,12 @@ def getTopFive(spotify: SpotifyService = Depends(get_spotify_service)):
     # print(data.item.album.name)
     
     return data
+
+@app.post("/gesture")
+def receive_gesture(event: GestureEvent):
+    return {"view": GestureHandler.swap_view(event.gesture)}
+
+@app.get("/view")
+def get_view():
+    with GestureHandler.view_lock:
+        return {"view": GestureHandler.VIEWS[GestureHandler.view_index]}

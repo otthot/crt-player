@@ -1,0 +1,4 @@
+mediapipe>=0.10,<0.11
+opencv-contrib-python>=4.8,<6
+requests>=2.31,<3
+python-dotenv>=1,<2

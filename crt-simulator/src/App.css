@@ -1,8 +1,102 @@
 /* Always a centered square that fills the shorter side of the viewport */
 .app {
+  position: relative;
   width: min(100vw, 100dvh);
   aspect-ratio: 1 / 1;
   /* Lets children size themselves with cqmin units relative to the square */
   container-type: size;
   --crt-padding: 4cqmin;
+}
+
+.app__scene {
+  width: 100%;
+  height: 100%;
+}
+
+.app__pixels {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+  grid-template-rows: repeat(18, minmax(0, 1fr));
+  overflow: hidden;
+  border-radius: 3% / 4%;
+  pointer-events: none;
+}
+
+.app__pixel {
+  background: var(--pixel-color);
+  box-shadow: inset 0 0 0 1px rgba(107, 255, 119, 0.08);
+  opacity: 0;
+}
+
+.app--out .app__pixel {
+  animation: pixel-cover 220ms steps(2, end) forwards;
+  animation-delay: var(--pixel-delay);
+}
+
+.app--in .app__pixel {
+  opacity: 1;
+  animation: pixel-reveal 220ms steps(2, end) forwards;
+  animation-delay: calc(238ms - var(--pixel-delay));
+}
+
+.app--out .app__scene {
+  animation: scene-break 460ms steps(6, end) forwards;
+}
+
+.app--in .app__scene {
+  animation: scene-build 460ms steps(6, end) forwards;
+}
+
+@keyframes pixel-cover {
+  from { opacity: 0; transform: translateY(-35%) scale(0.7); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pixel-reveal {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(45%) scale(0.7); }
+}
+
+@keyframes scene-break {
+  from { opacity: 1; filter: none; transform: translateY(0); }
+  to { opacity: 0; filter: blur(3px) contrast(1.5); transform: translateY(2cqmin); }
+}
+
+@keyframes scene-build {
+  from { opacity: 0; filter: blur(3px) contrast(1.5); transform: translateY(-2cqmin); }
+  to { opacity: 1; filter: none; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app--out .app__pixel,
+  .app--in .app__pixel,
+  .app--out .app__scene,
+  .app--in .app__scene {
+    animation: none;
+  }
+}
+
+.app__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2cqmin;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(83, 255, 116, 0.3);
+  color: #a6ffad;
+  text-align: center;
+  letter-spacing: 0.15em;
+}
+
+.app__placeholder span {
+  font-size: clamp(10px, 1.6cqmin, 18px);
+}
+
+.app__placeholder strong {
+  font-size: clamp(20px, 4cqmin, 48px);
 }

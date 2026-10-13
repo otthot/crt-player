@@ -14,6 +14,13 @@
   gap: var(--gap);
 }
 
+.player--empty {
+  color: #a6ffad;
+  font-size: clamp(16px, 3cqmin, 36px);
+  letter-spacing: 0.12em;
+  text-align: center;
+}
+
 .player__cover {
   display: block;
   width: var(--cover-size);

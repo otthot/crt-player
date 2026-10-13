@@ -6,20 +6,20 @@ function AlbumCover({ href }: { href?: string }) {
   return <img className="player__cover" src={href} alt="Album cover" />
 }
 
-function ActionButtons(){
+// function ActionButtons(){
 
-  const next = <button>Next</button>
-  const pause = <button>Pause</button>
-  const back = <button>Back</button>
+//   const next = <button>Next</button>
+//   const pause = <button>Pause</button>
+//   const back = <button>Back</button>
 
-  return (
-    <div className="player__actions">
-      {back}
-      {pause}
-      {next}
-    </div>
-  )
-}
+//   return (
+//     <div className="player__actions">
+//       {back}
+//       {pause}
+//       {next}
+//     </div>
+//   )
+// }
 
 
 function ProgressBar({progressMs, durationMs} : {progressMs : number, durationMs : number}){
@@ -40,8 +40,15 @@ export function Player() {
   const { data, error } = useGetPlayingTrack()
 
   // if (isLoading) return <p>Loading...</p>
-  if (error) return <p>Could not load artist: {error.message}</p>
-  if (!data) return <p>No artist found...</p>
+  if (error || !data?.item) {
+    return (
+      <CrtScreen>
+        <main className="player player--empty">
+          {error ? 'COULD NOT LOAD TRACK' : 'NOTHING PLAYING'}
+        </main>
+      </CrtScreen>
+    )
+  }
 
   const progressMs = data.progress_ms || 0
   const durationMs = data.item?.duration_ms || 0
