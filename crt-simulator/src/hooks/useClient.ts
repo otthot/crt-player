@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 const DEFAULT_OPTIONS = {}
 
@@ -17,27 +17,38 @@ const API_URL = "http://127.0.0.1:8000"
 export function useFetch<T> ({endpoint, method} : FetchProps) {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<T | null>(null)
+    const [error, setError] = useState<Error | null>(null)
 
-    const commonFetch = async ({
+    const commonFetch = useCallback(async ({
         input,
         fetchOptions = {}
-    } : CommonFetchProps) => {
+    } : CommonFetchProps = {}) => {
         setIsLoading(true)
+        setError(null)
 
-        const url = API_URL + endpoint
+        try {
+            const url = API_URL + endpoint
+            const body = method === 'GET' ? undefined : JSON.stringify(input)
 
-        const response = await fetch(url, {
-            method,
-            ...DEFAULT_OPTIONS,
-            ...fetchOptions,
-            body : JSON.stringify(input)
-        })
+            const response = await fetch(url, {
+                method,
+                ...DEFAULT_OPTIONS,
+                ...fetchOptions,
+                body
+            })
 
-        const data = await response.json()
+            if (!response.ok) {
+                throw new Error(`Request failed with status ${response.status}`)
+            }
 
-        setIsLoading(false)
-        setData(data)
-    };
+            const responseData: T = await response.json()
+            setData(responseData)
+        } catch (caughtError) {
+            setError(caughtError instanceof Error ? caughtError : new Error('Request failed'))
+        } finally {
+            setIsLoading(false)
+        }
+    }, [endpoint, method]);
 
-    return { isLoading, commonFetch, data };
+    return { isLoading, commonFetch, data, error };
 }

@@ -136,14 +136,20 @@ wheels = [
 [[package]]
 name = "crt-player-api"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "fastapi", version = "0.128.8", source = { registry = "https://pypi.org/simple" }, extra = ["standard"], marker = "python_full_version < '3.10'" },
     { name = "fastapi", version = "0.141.1", source = { registry = "https://pypi.org/simple" }, extra = ["standard"], marker = "python_full_version >= '3.10'" },
+    { name = "websockets", version = "15.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "websockets", version = "16.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version == '3.10.*'" },
+    { name = "websockets", version = "17.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "fastapi", extras = ["standard"], specifier = ">=0.128.8" }]
+requires-dist = [
+    { name = "fastapi", extras = ["standard"], specifier = ">=0.128.8" },
+    { name = "websockets", specifier = ">=15.0.1" },
+]
 
 [[package]]
 name = "detect-installer"
